@@ -1,9 +1,8 @@
-import "../styles/globals.css";
+import '../styles/globals.css'
+import type { AppProps } from 'next/app'
 
-function MyApp() {
-  return (
-    <h1 className="text-3xl font-bold underline text-red-500">Hello world!</h1>
-  );
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />
 }
 
-export default MyApp;
+export default MyApp
