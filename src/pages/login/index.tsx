@@ -1,6 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import auth from '../../api/auth'
+import Link from 'next/link'
+import Router, { useRouter } from 'next/router'
 
 const Login = () => {
+  const [error, setEror] = useState('')
+  const router = useRouter()
+  const formik = useFormik({
+    initialValues: {
+      identifier: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      identifier: Yup.string()
+        .required('')
+        .min(4, 'Must be 4 characters or more'),
+      password: Yup.string()
+        .required('')
+        .matches(
+          /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/,
+          'Password must be 7-19 characters and contain at least one letter, one number and a special character'
+        ),
+    }),
+    onSubmit: async (values) => {
+      try {
+        const response = await auth.login(values)
+        localStorage.setItem('jwt', response.data.jwt)
+        router.push('/')
+      } catch (error) {
+        const { response }: any = error
+        const { request, ...errorObject } = response
+        console.log(errorObject.data.error.message)
+        setEror(errorObject.data.error.message)
+      }
+    },
+  })
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 bg-gray-900">
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 ">
@@ -8,21 +44,34 @@ const Login = () => {
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
             Sign in to your account
           </h1>
-          <form className="space-y-4 md:space-y-6" action="#">
+          <form
+            className="space-y-4 md:space-y-6"
+            action="#"
+            onSubmit={formik.handleSubmit}
+          >
             <div>
               <label
                 htmlFor="email"
                 className="block mb-2 text-sm font-medium text-gray-900 "
               >
-                Your email
+                Your email or username
               </label>
               <input
                 type="email"
-                name="email"
+                name="identifier"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
-                placeholder="name@company.com"
+                className="block border border-gray-300 w-full p-3 rounded outline-green-400"
+                placeholder="Your email or username"
+                value={formik.values.identifier}
+                onChange={formik.handleChange}
               />
+              <div className="">
+                {formik.errors.identifier && (
+                  <p className="text-xs text-red-600">
+                    {formik.errors.identifier}
+                  </p>
+                )}
+              </div>
             </div>
             <div>
               <label
@@ -36,8 +85,18 @@ const Login = () => {
                 name="password"
                 id="password"
                 placeholder="••••••••"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
+                className="block border border-gray-300 w-full p-3 rounded outline-green-400"
+                value={formik.values.password}
+                onChange={formik.handleChange}
               />
+              <div className="">
+                {formik.errors.password && (
+                  <p className="text-xs text-red-600">
+                    {formik.errors.password}
+                  </p>
+                )}
+                {error && <p className="text-xs text-red-600">{error}</p>}
+              </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-start">
@@ -55,12 +114,12 @@ const Login = () => {
                   </label>
                 </div>
               </div>
-              <a
+              <Link
                 href="#"
                 className="text-sm font-medium text-primary-600 hover:underline "
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
             <button
               type="submit"
@@ -68,15 +127,14 @@ const Login = () => {
             >
               Sign in
             </button>
-            <p className="text-sm font-light text-gray-500 ">
+            <div className="text-sm font-light text-gray-500 flex">
               Don’t have an account yet?{' '}
-              <a
-                href="#"
-                className="font-medium text-primary-600 hover:underline "
-              >
-                Sign up
-              </a>
-            </p>
+              <Link href="/register">
+                <p className="border-b border-blue-500 text-blue-500 hover:text-blue-800 hover:border-blue-800 cursor-pointer">
+                  Sign Up
+                </p>
+              </Link>
+            </div>
           </form>
         </div>
       </div>
