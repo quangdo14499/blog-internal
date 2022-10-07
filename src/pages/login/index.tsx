@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import auth from '../../api/auth'
 import Link from 'next/link'
 import Router, { useRouter } from 'next/router'
+import { LoginContext } from '../../providers/LoginProvider'
 
 const Login = () => {
   const [error, setEror] = useState('')
+  const { confirmed, user, setConfirmed } = useContext(LoginContext)
   const router = useRouter()
   const formik = useFormik({
     initialValues: {
@@ -19,15 +21,13 @@ const Login = () => {
         .min(4, 'Must be 4 characters or more'),
       password: Yup.string()
         .required('')
-        .matches(
-          /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/,
-          'Password must be 7-19 characters and contain at least one letter, one number and a special character'
-        ),
+        .min(4, 'Must be 4 characters or more'),
     }),
     onSubmit: async (values) => {
       try {
         const response = await auth.login(values)
         localStorage.setItem('jwt', response.data.jwt)
+        setConfirmed(response.data.jwt.length > 0)
         router.push('/')
       } catch (error) {
         const { response }: any = error

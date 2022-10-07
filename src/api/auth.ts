@@ -15,6 +15,10 @@ class Auth {
   login = (body: LoginInput) => {
     return axiosClient.post(`${urls.API_URL}auth/local`, body)
   }
+
+  confirmed = () => {
+    return axiosClient.get(`${urls.API_URL}users/me`)
+  }
 }
 
 const auth = new Auth()

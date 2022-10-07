@@ -1,7 +1,13 @@
-import type { NextPage } from "next";
+import React, { useContext, useEffect, useState } from 'react'
+import type { NextPage } from 'next'
+import { LoginContext } from '../providers/LoginProvider'
 
 const Home: NextPage = () => {
-  return <div>Home Page</div>;
-};
+  const { confirmed, user } = useContext(LoginContext)
+  if (!confirmed) {
+    return <></>
+  }
+  return <div>Home Page</div>
+}
 
-export default Home;
+export default Home

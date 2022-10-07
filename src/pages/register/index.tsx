@@ -27,10 +27,7 @@ const SignUpForm = () => {
         ),
       password: Yup.string()
         .required('')
-        .matches(
-          /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/,
-          'Password must be 7-19 characters and contain at least one letter, one number and a special character'
-        ),
+        .min(4, 'Must be 4 characters or more'),
       confirmedPassword: Yup.string()
         .required('')
         .oneOf([Yup.ref('password'), null], 'Password must match'),
