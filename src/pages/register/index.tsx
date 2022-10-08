@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import auth from '../../api/auth'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { LoginContext } from '../../providers/LoginProvider'
 
 const SignUpForm = () => {
   const [error, setError] = useState('')
+  const { confirmed, user, setConfirmed } = useContext(LoginContext)
   const router = useRouter()
   const formik = useFormik({
     initialValues: {
@@ -36,6 +38,7 @@ const SignUpForm = () => {
       try {
         const response = await auth.register(values)
         localStorage.setItem('jwt', response.data.jwt)
+        setConfirmed(true)
         router.push('/')
       } catch (error) {
         const { response }: any = error

@@ -29,7 +29,10 @@ export const LoginProvider: React.FC<Props> = ({ children }) => {
     ;(async () => {
       try {
         const response = await auth.confirmed()
-        console.log(response)
+        setConfirmed(true)
+        const responseUser = response.data
+        console.log(responseUser)
+        setUser(responseUser)
       } catch (err) {
         console.error(err)
         router.push('/login')

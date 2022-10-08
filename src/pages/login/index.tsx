@@ -27,7 +27,7 @@ const Login = () => {
       try {
         const response = await auth.login(values)
         localStorage.setItem('jwt', response.data.jwt)
-        setConfirmed(response.data.jwt.length > 0)
+        setConfirmed(true)
         router.push('/')
       } catch (error) {
         const { response }: any = error
