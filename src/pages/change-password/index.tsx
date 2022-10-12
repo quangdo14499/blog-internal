@@ -6,26 +6,30 @@ import Link from 'next/link'
 import Router, { useRouter } from 'next/router'
 import { UserLoginContext } from '../../providers/UserLoginProvider'
 
-const Login = () => {
+const ChangePassword = () => {
   const [error, setEror] = useState('')
   const { setConfirmed } = useContext(UserLoginContext)
   const router = useRouter()
   const formik = useFormik({
     initialValues: {
-      identifier: '',
       password: '',
+      currentPassword: '',
+      passwordConfirmation: '',
     },
     validationSchema: Yup.object({
-      identifier: Yup.string()
+      password: Yup.string()
         .required('')
         .min(4, 'Must be 4 characters or more'),
-      password: Yup.string()
+      currentPassword: Yup.string()
+        .required('')
+        .min(4, 'Must be 4 characters or more'),
+      passwordConfirmation: Yup.string()
         .required('')
         .min(4, 'Must be 4 characters or more'),
     }),
     onSubmit: async (values) => {
       try {
-        const response = await auth.login(values)
+        const response = await auth.changePassword(values)
         localStorage.setItem('jwt', response.data.jwt)
         setConfirmed(true)
         router.push('/')
@@ -38,10 +42,10 @@ const Login = () => {
     },
   })
   return (
-    <div className="relative flex flex-col justify-center min-h-screen overflow-hidden bg-slate-200">
+    <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-xl lg:max-w-md">
         <h1 className="text-3xl font-semibold text-center text-purple-700 uppercase">
-          Sign in
+          change password
         </h1>
         <form className="mt-6" action="#" onSubmit={formik.handleSubmit}>
           <div className="mb-2">
@@ -49,20 +53,20 @@ const Login = () => {
               htmlFor="email"
               className="block text-sm font-semibold text-gray-800"
             >
-              Email
+              Current Password
             </label>
             <input
-              type="email"
-              name="identifier"
+              type="password"
+              name="currentPassword"
               className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              placeholder="Your email or username"
-              value={formik.values.identifier}
+              placeholder="••••••••"
+              value={formik.values.currentPassword}
               onChange={formik.handleChange}
             />
             <div className="">
-              {formik.errors.identifier && (
+              {formik.errors.currentPassword && (
                 <p className="text-xs text-red-600">
-                  {formik.errors.identifier}
+                  {formik.errors.currentPassword}
                 </p>
               )}
             </div>
@@ -72,7 +76,7 @@ const Login = () => {
               htmlFor="password"
               className="block text-sm font-semibold text-gray-800"
             >
-              Password
+              New Password
             </label>
             <input
               type="password"
@@ -86,6 +90,29 @@ const Login = () => {
               {formik.errors.password && (
                 <p className="text-xs text-red-600">{formik.errors.password}</p>
               )}
+            </div>
+          </div>
+          <div className="mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-gray-800"
+            >
+              Confirmed Password
+            </label>
+            <input
+              type="password"
+              name="passwordConfirmation"
+              className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              placeholder="••••••••"
+              value={formik.values.passwordConfirmation}
+              onChange={formik.handleChange}
+            />
+            <div className="">
+              {formik.errors.passwordConfirmation && (
+                <p className="text-xs text-red-600">
+                  {formik.errors.passwordConfirmation}
+                </p>
+              )}
               {error && <p className="text-xs text-red-600">{error}</p>}
             </div>
           </div>
@@ -94,7 +121,7 @@ const Login = () => {
           </div>
           <div className="mt-6">
             <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
-              Login
+              Change
             </button>
           </div>
         </form>
@@ -145,4 +172,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ChangePassword

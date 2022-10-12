@@ -10,13 +10,16 @@
     "prettier-format": "prettier --config .prettierrc 'src/**/**/*.ts' --write"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.3",
     "axios": "^0.27.2",
+    "dayjs": "^1.11.5",
     "eslint-config-prettier": "^8.5.0",
     "formik": "^2.2.9",
     "next": "^12.3.1",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-table": "^7.8.0",
     "yup": "^0.32.11",
     "zod": "^3.19.1"
   },
