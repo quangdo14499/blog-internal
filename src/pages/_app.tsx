@@ -1,9 +1,13 @@
-import "../styles/globals.css";
+import '../styles/globals.css'
+import type { AppProps } from 'next/app'
+import { UserLoginProvider } from '../providers/UserLoginProvider'
 
-function MyApp() {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <h1 className="text-3xl font-bold underline text-red-500">Hello world!</h1>
-  );
+    <UserLoginProvider>
+      <Component {...pageProps} />
+    </UserLoginProvider>
+  )
 }
 
-export default MyApp;
+export default MyApp

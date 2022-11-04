@@ -1,7 +1,14 @@
-import type { NextPage } from "next";
+import React, { useContext, useEffect, useState } from 'react'
+import type { NextPage } from 'next'
+import Blogs from '../containers/Blogs'
+import CreateForm from '../containers/BlogManager/CreateForm'
 
 const Home: NextPage = () => {
-  return <div>Home Page</div>;
-};
+  return (
+    <div className="relative">
+      <Blogs />
+    </div>
+  )
+}
 
-export default Home;
+export default Home
